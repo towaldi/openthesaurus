@@ -1,5 +1,6 @@
 async function getSynonyms() {
-    let url = 'https://www.openthesaurus.de/synonyme/search?q=test&format=application/json';
+    let query = document.getElementById('search-query').value;
+    let url = `https://www.openthesaurus.de/synonyme/search?q=${query}&format=application/json`;
     let response = await fetch(url);
     let responseAsJson = await response.json();
 
@@ -12,7 +13,24 @@ async function getSynonyms() {
 function renderSynsets(synsets) {
     let container = document.getElementById('container');
 
-    container.innerHTML = /*html*/  `<div>
-        <p><b>${synsets.length}</b>synonyms have been loaded</p>
-    </div>`;
+    container.innerHTML = /*html*/  `   <div>
+                                            <p><b>${synsets.length}</b>synonym-sets have been loaded</p>
+                                        </div>`;
+
+    for (let i = 0; i < synsets.length; i++) {
+        const synset = synsets[i];
+        let terms = synset['terms'];     // Is a array
+        container.innerHTML += /*html*/ `   <div>
+                                                <h3>Synonym-set id ${synset['id']}</h3>
+                                            </div>`;
+
+        for (let j = 0; j < terms.length; j++) {
+            const term = terms[j];
+            container.innerHTML += /*html*/ `   <div>
+                                                    <p>${term['term']}</p>
+                                                </div>`;
+            
+        }
+        
+    }
 }
